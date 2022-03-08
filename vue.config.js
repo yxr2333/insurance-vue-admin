@@ -6,7 +6,7 @@ function resolve(dir) {
 }
 proxyObj['/'] = {
   ws: true,
-  target: 'http://localhost:8081',
+  target: 'https://ins-spring-boot-1618793-1309615625.ap-shanghai.run.tcloudbase.com/',
   changeOrigin: true,
   pathReWrite: {
     '^/': '/'
