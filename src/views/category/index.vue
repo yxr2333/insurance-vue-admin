@@ -4,7 +4,7 @@
     <div>
       <div style="display: flex;justify-content: flex-end;">
         <div>
-          <el-button icon="el-icon-plus">添加分类</el-button>
+          <el-button icon="el-icon-plus" @click="handleAdd">添加分类</el-button>
           <el-button type="primary" icon="el-icon-upload">导入数据</el-button>
           <el-button type="primary" icon="el-icon-download" @click="handleExport">导出数据</el-button>
         </div>
@@ -88,6 +88,37 @@
         <el-button type="primary" @click="handleConfirm">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="提示"
+      :visible.sync="addDialogVisible"
+      width="30%">
+      <el-form ref="addForm" :model="addData" label-width="80px" :rules="rules">
+        <el-form-item prop="cateName" label="分类编号">
+          <el-input v-model="addData.cateName" disabled></el-input>
+        </el-form-item>
+        <el-form-item prop="name" label="分类名称">
+          <el-input v-model="addData.name" placeholder="请输入分类名称..."></el-input>
+        </el-form-item>
+        <el-form-item prop="check" label="根菜单">
+          <el-switch v-model="isRootCate" active-color="#13ce66" inactive-color="#ff4949" @change="calcBySwitch"></el-switch>
+        </el-form-item>
+        <el-form-item prop="parent" label="父级菜单" v-if="!isRootCate">
+          <el-select v-model="addData.parent.cateName" placeholder="请选择父级菜单" @change="calcHead">
+            <el-option
+              v-for="(item,index) in cateList"
+              v-if="item.parent === null"
+              :key="index"
+              :value="item.cateName"
+              :label="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirmAdd">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -106,13 +137,24 @@ export default {
         cateName: '',
         name: ''
       },
+      addDialogVisible: false,
       dialogVisible: false,
       editData: {
         cateName: '',
         name: '',
         parent: {}
+      },
+      isRootCate: false,
+      addData: {
+        cateName: '',
+        name: '',
+        parent: {
+          cateName: ''
+        }
       }
     }
+  },
+  computed: {
   },
   mounted() {
     this.initData();
@@ -126,6 +168,15 @@ export default {
         }
       })
       this.loading = false;
+    },
+    calcHead(){
+      let list = [];
+      this.cateList.forEach((item,index) => {
+        if(item.parent !== null && item.parent.cateName === this.addData.parent.cateName){
+          list.push(item);
+        }
+      })
+      this.addData.cateName = this.addData.parent.cateName.substr(0,6) + '_' + (list.length + 1);
     },
     handleExport(){
       window.open('http://localhost:8081/file/download/excel/category');
@@ -167,8 +218,42 @@ export default {
           return false;
         }
       })
+    },
+    handleAdd() {
+      this.addDialogVisible = true;
+    },
+    handleConfirmAdd() {
+      console.log(this.addData);
+      this.$refs.addForm.validate((valid) => {
+        if(valid){
+          this.postRequest('/category',this.addData).then(resp => {
+            if(resp){
+              this.addDialogVisible = false;
+              this.initData();
+            }
+          })
+        }else{
+          return false;
+        }
+      })
+    },
+    calcBySwitch(data) {
+      if(data){
+        let list = [];
+        this.cateList.forEach((item,index) => {
+          if(item.parent === null){
+            list.push(item);
+          }
+        })
+        this.addData.cateName = 'cate_' + (list.length + 1);
+        this.addData.parent = null;
+      }else{
+        this.addData.cateName = '';
+        this.addData.parent = {
+          cateName:  ''
+        };
+      }
     }
-
   }
 }
 </script>

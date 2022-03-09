@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); // 引入express
 
 const app = express();
 const {createProxyMiddleware}= require('http-proxy-middleware');//引入反向代理的插件
