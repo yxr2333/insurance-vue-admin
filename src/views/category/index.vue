@@ -1,7 +1,14 @@
 <template>
   <div style="margin: 20px;">
-    <div style="margin: 10px;font-weight: bold;font-size: 40px;">保险分类管理</div>
+    <div class="header-text">保险分类管理</div>
     <div>
+      <div style="display: flex;justify-content: flex-end;">
+        <div>
+          <el-button icon="el-icon-plus">添加分类</el-button>
+          <el-button type="primary" icon="el-icon-upload">导入数据</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="handleExport">导出数据</el-button>
+        </div>
+      </div>
       <el-table
         :data="cateList"
         style="width: 100%">
@@ -44,12 +51,43 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="primary" size="small">编辑</el-button>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <el-dialog
+      title="编辑"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <el-form ref="form" :model="editData" label-width="80px" :rules="rules">
+        <el-form-item prop="cateName" label="分类编号">
+          <el-input v-model="editData.cateName" disabled></el-input>
+        </el-form-item>
+        <el-form-item prop="name" label="分类名称">
+          <el-input v-model="editData.name" placeholder="请输入分类名称..."></el-input>
+        </el-form-item>
+        <el-form-item prop="parent" v-if="editData.parent !== null" label="父级菜单">
+          <el-select v-model="editData.parent.cateName" placeholder="请选择父级菜单...">
+            <el-option
+              v-for="(item,index) in cateList"
+              :key="index"
+              :label="item.name"
+              :value="item.cateName"
+              v-if="item.parent === null">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-else label="父级菜单">
+          <el-tag type="warning">无</el-tag>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -58,12 +96,21 @@ export default {
   name: "Category",
   data() {
     return{
+      rules:{
+        name: [{required: true,message: '分类名称不可为空！',trigger: 'blur'}]
+      },
       loading: false,
       activeName: 1,
       cateList: [],
       detailData: {
         cateName: '',
         name: ''
+      },
+      dialogVisible: false,
+      editData: {
+        cateName: '',
+        name: '',
+        parent: {}
       }
     }
   },
@@ -80,10 +127,48 @@ export default {
       })
       this.loading = false;
     },
+    handleExport(){
+      window.open('http://localhost:8081/file/download/excel/category');
+    },
     handleLookDetail(data) {
       this.detailData.cateName = data.cateName;
       this.detailData.name = data.name;
+    },
+    handleDelete(data){
+      this.$confirm('该操作将删除[' + data.name + ']分类，确认继续？','警告',{
+        confirmButtonText: '确 认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteRequest('/category/' + data.cateName).then(resp => {
+          this.initData();
+        })
+      }).catch(() => {
+        this.$message.info('已取消');
+      })
+    },
+    handleEdit(data){
+      this.dialogVisible = true;
+      console.log(data);
+      this.editData = JSON.parse(JSON.stringify(data));
+    },
+    handleConfirm(){
+      this.$refs.form.validate((valid) => {
+        if(valid){
+          // todo: 后端设置更新信息之后，对数据的编号进行处理
+          this.putRequest('/category',this.editData).then(resp => {
+            if(resp){
+              this.dialogVisible = false;
+              this.initData();
+            }
+          })
+        }else{
+          this.$message.error('请检查输入是否有误！');
+          return false;
+        }
+      })
     }
+
   }
 }
 </script>
@@ -92,5 +177,10 @@ export default {
 .el-collapse-item__header{
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   font-size: 30px!important;
+}
+.header-text{
+  margin: 10px;
+  font-weight: bold;
+  font-size: 40px;
 }
 </style>
