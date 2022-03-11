@@ -12,7 +12,7 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <el-menu-item class="mid-title">后台管理系统</el-menu-item>
+        <el-menu-item class="mid-title" v-if="sidebar.opened">后台管理系统</el-menu-item>
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>

@@ -14,31 +14,6 @@
     </div>
     <div class="main">
       <div>
-        <el-tabs type="border-card">
-          <el-tab-pane label="jdk信息">
-            <el-descriptions border>
-              <el-descriptions-item label="名称">{{ systemInfo.jdk.name }}</el-descriptions-item>
-              <el-descriptions-item label="版本">{{ systemInfo.jdk.version }}</el-descriptions-item>
-            </el-descriptions>
-          </el-tab-pane>
-          <el-tab-pane label="jvm信息">
-            <el-descriptions border>
-              <el-descriptions-item label="名称">{{ systemInfo.jvm.name }}</el-descriptions-item>
-              <el-descriptions-item label="版本">{{ systemInfo.jvm.version }}</el-descriptions-item>
-            </el-descriptions>
-          </el-tab-pane>
-          <el-tab-pane label="os信息">
-            <el-descriptions border>
-              <el-descriptions-item label="系统架构">
-                <el-tag >{{ systemInfo.os.arch }}</el-tag>
-              </el-descriptions-item>
-              <el-descriptions-item label="系统名称">{{ systemInfo.os.name }}</el-descriptions-item>
-              <el-descriptions-item label="系统版本">{{ systemInfo.os.version }}</el-descriptions-item>
-            </el-descriptions>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-      <div>
         <el-row :gutter="40" class="panel-group">
           <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
             <div class="card-panel">
@@ -47,7 +22,7 @@
               </div>
               <div class="card-panel-description">
                 <div class="card-panel-text">
-                  New Visits
+                  访问人数
                 </div>
                 <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
               </div>
@@ -60,7 +35,7 @@
               </div>
               <div class="card-panel-description">
                 <div class="card-panel-text">
-                  Messages
+                  商品数目
                 </div>
                 <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
               </div>
@@ -73,7 +48,7 @@
               </div>
               <div class="card-panel-description">
                 <div class="card-panel-text">
-                  Purchases
+                  会员数目
                 </div>
                 <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
               </div>
@@ -86,7 +61,7 @@
               </div>
               <div class="card-panel-description">
                 <div class="card-panel-text">
-                  Shoppings
+                  昨日销售额
                 </div>
                 <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
               </div>
@@ -94,25 +69,34 @@
           </el-col>
         </el-row>
       </div>
-      <el-row>
-        <line-chart />
+      <el-row :gutter="10">
+       <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+          <CateChart />
+       </el-col>
+        <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+          <MonthChart />
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+          <MonthPriceChart />
+        </el-col>
       </el-row>
-      <div>
-        <div id="chart1" style="width: 500px;height: 300px;" />
-      </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
 <script>
 import countTo from 'vue-count-to'
-import lineChart from '@/components/LineChart/index'
+import CateChart from '@/components/CateChart'
+import MonthChart from '@/components/MonthChart'
+import MonthPriceChart from '@/components/MonthPriceChart'
 export default {
   name: 'Dashboard',
   components: {
     countTo,
-    lineChart
+    CateChart,
+    MonthChart,
+    MonthPriceChart
   },
   data() {
     return {
@@ -138,6 +122,7 @@ export default {
   },
   mounted() {
     this.initData();
+    this.drawPic();
   },
   methods: {
     initData() {
@@ -159,21 +144,7 @@ export default {
       })
     },
     drawPic(){
-      const myEchart1 = this.$echarts.init(document.getElementById('chart1'))
-      myEchart1.setOption({
-        tooltip: {},
-        xAxis: {
-          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
-        },
-        yAxis: {},
-        series: [
-          {
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-          }
-        ]
-      })
+
     },
   }
 

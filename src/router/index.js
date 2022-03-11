@@ -95,24 +95,6 @@ export const constantRoutes = [
           icon: 'el-icon-shopping-cart-2'
         }
       },
-      // {
-      //   path: 'permissionControl',
-      //   component: () => import('@/views/permission'),
-      //   name: 'Permission',
-      //   meta: {
-      //     title: '权限信息管理',
-      //     icon: 'el-icon-star-on'
-      //   }
-      // },
-      // {
-      //   path: 'roleControl',
-      //   component: () => import('@/views/role'),
-      //   name: 'Role',
-      //   meta: {
-      //     title: '用户角色管理',
-      //     icon: 'el-icon-s-check'
-      //   }
-      // },
       {
         path: 'carouselControl',
         component: () => import('@/views/carousel'),
@@ -130,6 +112,29 @@ export const constantRoutes = [
           title: '保险分类管理',
           icon: 'el-icon-notebook-2'
         }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    name: 'Order',
+    meta: {
+      title: '订单管理',
+      icon: 'el-icon-eleme',
+    },
+    children: [
+      {
+        path: 'order',
+        component: () => import('@/views/order'),
+        name: 'Order',
+        meta: {
+          title: '订单管理',
+          icon: 'el-icon-s-order'
+        }
+      },
+      {
+        path: ''
       }
     ]
   },
