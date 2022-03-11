@@ -71,6 +71,19 @@ export default {
     }
   },
   mounted() {
+    if(window.sessionStorage.getItem('satoken') !== null || window.sessionStorage.getItem('satoken') !== undefined){
+      this.getRequest('/user/login/check').then(resp => {
+        if(resp){
+          if(resp.data === false){
+            window.sessionStorage.removeItem('satoken');
+            this.$router.replace('/login');
+          }else{
+            this.$router.replace('/dashboard');
+            this.$message.success('登陆成功！');
+          }
+        }
+      })
+    }
     this.$notify.success({
       title: '通知',
       message: '测试账户：yxr1\n密码：123'
@@ -99,7 +112,7 @@ export default {
               window.sessionStorage.setItem('satoken', token)
               window.sessionStorage.setItem('user', JSON.stringify(userInfo))
               const path = this.$route.query.redirect
-              this.$router.replace((path === '/' || path === undefined) ? '/dashboard/dashboard' : path)
+              this.$router.replace((path === '/' || path === undefined) ? '/dashboard' : path)
             }
             setInterval(() => {
               this.loading = false

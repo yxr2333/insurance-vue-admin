@@ -44,7 +44,7 @@
             </el-table-column>
             <el-table-column
               prop="products"
-              width="100"
+              width="150"
               label="购买产品">
               <template slot-scope="scope">
                 <el-tag type="primary" v-if="scope.row.products.length >= 2">...</el-tag>
@@ -85,7 +85,7 @@
               label="完成时间"
               width="200">
               <template slot-scope="scope">
-                <el-tag type="success" v-if="scope.row.finishTime === null">进行中</el-tag>
+                <el-tag type="warning" v-if="scope.row.finishTime === null">进行中</el-tag>
                 <div v-else>{{ scope.row.finishTime }}</div>
               </template>
             </el-table-column>
@@ -122,7 +122,7 @@ export default {
   },
   methods: {
       initData() {
-        let url = '/order/all?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize; 
+        let url = '/order/all?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize;
         this.getRequest(url).then((resp) => {
           if(resp){
             console.log(resp);
