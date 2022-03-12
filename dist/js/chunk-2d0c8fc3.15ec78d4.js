@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0c8fc3"],{"56e1":function(e,n,t){"use strict";t.r(n);var c=function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},r=[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",[t("i",{staticClass:"el-icon-user-solid"},[e._v("CleveSheep")])])}],s={name:"MenuBarHeader"},a=s,i=t("2877"),l=Object(i["a"])(a,c,r,!1,null,"638537b0",null);n["default"]=l.exports}}]);
-//# sourceMappingURL=chunk-2d0c8fc3.15ec78d4.js.map
