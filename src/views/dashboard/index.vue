@@ -152,13 +152,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .head-container{
+  height: 100px;
   margin: 20px;
   background-color: #fff;
 }
 .main{
   background-color: #f0f2f5;
   padding: 20px;
-  height: 100vh;
+  height: calc(100vh - 200px);
 }
 .panel-group {
   margin-top: 18px;

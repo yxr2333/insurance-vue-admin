@@ -141,7 +141,15 @@ export const constantRoutes = [
           title: '订单审核',
           icon: 'audit'
         }
-
+      },
+      {
+        path: 'deliver',
+        component: () => import('@/views/order/Deliver'),
+        name: 'Deliver',
+        meta: {
+          title: '发货管理',
+          icon: 'el-icon-truck'
+        }
       }
     ]
   },

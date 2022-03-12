@@ -9,6 +9,28 @@
           placeholder="请输入订单编号..."
         ></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+        <el-button type="primary" :icon="advBtuIcon" @click="handleAdvSearch">高级搜索</el-button>
+        <el-collapse-transition>
+          <div v-show="iconFlag" style="margin-top: 10px;">
+            <el-form ref="form" :model="form" label-width="80px" :inline="true">
+              <el-form-item label="订单状态" prop="status">
+                <el-select v-model="form.status" placeholder="请选择订单状态...">
+                  <el-option value="-1" label="已支付"></el-option>
+                  <el-option value="0" label="进行中"></el-option>
+                  <el-option value="1" label="已完成"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="支付方式" prop="channel">
+                <el-select v-model="form.channel" placeholder="请选择支付渠道...">
+                  <el-option label="微信支付" value="微信支付"></el-option>
+                  <el-option label="支付宝" value="支付宝"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-button @click="$refs.form.resetFields();initData();">重 置</el-button>
+              <el-button type="primary" @click="handleConfirmAdvSearch">查询</el-button>
+            </el-form>
+          </div>
+        </el-collapse-transition>
       </div>
       <div>
           <el-button icon="el-icon-plus" @click="addDialogVisible = true">新建订单</el-button>
@@ -107,45 +129,79 @@
 export default {
   name: "Order",
   data(){
-      return{
-        orderId: null,
-        loading: false,
-        orderData: [],
-        addDialogVisible: false,
-        pageNum: 1,
-        pageSize: 10,
-        count: -1
-      }
+    return{
+      form: {
+        status: null,
+        channel: null
+      },
+      advBtuIcon: 'el-icon-arrow-down',
+      iconFlag: false,
+      orderId: null,
+      loading: false,
+      orderData: [],
+      addDialogVisible: false,
+      pageNum: 1,
+      pageSize: 10,
+      count: -1
+    }
   },
   mounted() {
     this.initData();
   },
   methods: {
-      initData() {
-        let url = '/order/all?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize;
-        this.getRequest(url).then((resp) => {
+    initData() {
+      this.loading = true;
+      let url = '/order/all?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize;
+      this.getRequest(url).then((resp) => {
+        if(resp){
+          console.log(resp);
+          this.count = resp.data.total;
+          this.orderData = resp.data.data;
+        }
+      });
+      setInterval(() => {this.loading = false;},500);
+    },
+    handleAdvSearch(){
+      if(!this.iconFlag){
+        this.advBtuIcon = 'el-icon-arrow-up';
+      }else{
+        this.advBtuIcon = 'el-icon-arrow-down'
+      }
+      this.iconFlag = !this.iconFlag;
+    },
+    handleSearch() {
+      if(this.orderId === ''){
+        this.initData();
+      }else if(this.orderId !== null){
+        this.loading = true;
+        this.getRequest('/order/' + this.orderId).then(resp => {
           if(resp){
-            console.log(resp);
-            this.count = resp.data.total;
-            this.orderData = resp.data.data;
+            this.orderData = resp.data;
           }
         });
-      },
-      handleSearch() {
-        this.$message.info('搜索');
-      },
-      handleImport() {
-
-      },
-      handleExport() {
-        window.open('http://localhost:8081/file/download/excel/order');
-      },
-      handleEdit(data) {
-        this.$message.success('编辑订单');
-      },
-      handleDetele(data) {
-        this.$message.success('删除订单');
+        setInterval(() => {this.loading = false;},500);
       }
+    },
+    handleImport() {
+
+    },
+    handleExport() {
+      window.open('http://localhost:8081/file/download/excel/order');
+    },
+    handleEdit(data) {
+      this.$message.success('编辑订单');
+    },
+    handleDetele(data) {
+      this.$message.success('删除订单');
+    },
+    handleConfirmAdvSearch() {
+      console.log(this.form);
+      this.postRequest('/order/get',this.form).then(resp => {
+        if(resp){
+          this.orderData = resp.data;
+        }
+      })
+    }
   }
 };
 </script>

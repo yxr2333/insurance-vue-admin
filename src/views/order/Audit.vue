@@ -1,6 +1,12 @@
 <template>
-  <div style="height: 100%">
-
+  <div v-if="imgsArr.length === 0" class="middle">
+    <img src="https://cn.vuejs.org/images/logo.svg" alt="" style="width: 200px;">
+    <div class="text">
+      <div>当前暂无订单需要审核！</div>
+      <div>休息一下吧~</div>
+    </div>
+  </div>
+  <div v-else style="height: 100%">
     <div class="main" style="height: 100%">
       <vue-waterfall-easy
         :imgsArr="imgsArr"
@@ -78,5 +84,18 @@ export default {
 <style scoped>
 .vue-waterfall-easy-container{
   height: calc(100vh - 50px)!important;
+}
+.middle{
+  height: calc(100vh - 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.middle .text{
+  text-align: center;
+  margin-top: 18px;
+  font-size: 25px;
+  font-weight: bold;
 }
 </style>

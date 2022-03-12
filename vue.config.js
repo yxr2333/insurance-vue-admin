@@ -5,24 +5,24 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 // 生产环境
-proxyObj['/'] = {
-  ws: true,
-  target: 'https://ins-spring-boot-1618793-1309615625.ap-shanghai.run.tcloudbase.com/',
-  changeOrigin: true,
-  pathReWrite: {
-    '^/': '/'
-  }
-}
-
-// 开发环境
 // proxyObj['/'] = {
 //   ws: true,
-//   target: 'http://localhost:8081',
+//   target: 'https://ins-spring-boot-1618793-1309615625.ap-shanghai.run.tcloudbase.com/',
 //   changeOrigin: true,
 //   pathReWrite: {
 //     '^/': '/'
 //   }
 // }
+
+// 开发环境
+proxyObj['/'] = {
+  ws: true,
+  target: 'http://localhost:8081',
+  changeOrigin: true,
+  pathReWrite: {
+    '^/': '/'
+  }
+}
 module.exports = {
   devServer: {
     host: '0.0.0.0',
