@@ -54,8 +54,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'yxr1',
-        password: '123'
+        username: '',
+        password: ''
       },
       loading: false,
       passwordType: 'password',
@@ -84,10 +84,6 @@ export default {
         }
       })
     }
-    this.$notify.success({
-      title: '通知',
-      message: '测试账户：yxr1\n密码：123'
-    })
   },
   methods: {
     showPwd() {
