@@ -330,6 +330,7 @@ export default {
       this.$message.success('裁剪完成');
     },
     cropUploadSuccess(jsonData,field){
+      console.log(jsonData);
       const code = jsonData.code;
       if(code === 200){
         this.$notify({
@@ -337,7 +338,7 @@ export default {
           title: '上传成功',
           message: '图片已成功上传至后台仓库'
         })
-        this.editForm.faceIcon = jsonData.data.data.url;
+        this.editForm.faceIcon = jsonData.data;
       } else{
         this.$notify({
           type: 'error',

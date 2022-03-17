@@ -1,95 +1,106 @@
 <template>
   <div>
-    <div v-if="listData.length === 0" class="middle">
+    <div v-if="listData.length === 0" class="middle" v-loading="loading">
       <img src="https://cn.vuejs.org/images/logo.svg" alt="" style="width: 200px;">
       <div class="text">
         <div>当前暂无订单需要发货！</div>
         <div>休息一下吧~</div>
       </div>
     </div>
-    <div v-else style="margin: 20px;">
+    <div v-else class="main">
       <el-descriptions
-        title="订单信息"
-        v-for="(item,index) in listData"
-        :key="index"
-        border
-        style="margin-bottom: 20px;">
-        <template slot="extra">
-          <el-button type="primary" size="small" @click="handleConfirm(item)">发货</el-button>
-        </template>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="number" class-name="des-icon"/>
-              <span>订单编号</span>
-            </div>
+          title="订单信息"
+          v-for="(item,index) in listData"
+          :key="index"
+          border
+          style="margin-bottom: 20px;">
+          <template slot="extra">
+            <el-button type="primary" size="small" @click="handleConfirm(item)">发货</el-button>
+            <el-button type="danger" size="small" @click="handleCancel(item)">驳回</el-button>
           </template>
-          <span>{{item.orderId}}</span>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="people2" class-name="des-icon"/>
-              <span>购买人</span>
-            </div>
-          </template>
-          <span>{{item.user.name}}</span>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="mail" class-name="des-icon"/>
-              <span>邮箱地址</span>
-            </div>
-          </template>
-          <span>{{item.user.email}}</span>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="mobile-phone" class-name="des-icon"/>
-              <span>联系电话</span>
-            </div>
-          </template>
-          <span>{{item.user.phone}}</span>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="logistics" class-name="des-icon"/>
-              <span>产品名称</span>
-            </div>
-          </template>
-          <span>{{item.products[0].name}}</span>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="status" class-name="des-icon"/>
-              <span>订单状态</span>
-            </div>
-          </template>
-          <el-tag :type="item.status === 0 ? 'warning' : 'success'">{{item.status === 0 ? '进行中' : '已完成'}}</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="time" class-name="des-icon"/>
-              <span>购买时间</span>
-            </div>
-          </template>
-          <span>{{item.buyTime}}</span>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <div>
-              <svg-icon icon-class="home" class-name="des-icon"/>
-              <span>收货地址</span>
-            </div>
-          </template>
-          <span>{{item.address}}</span>
-        </el-descriptions-item>
-      </el-descriptions>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="number" class-name="des-icon"/>
+                <span>订单编号</span>
+              </div>
+            </template>
+            <span>{{item.orderId}}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="people2" class-name="des-icon"/>
+                <span>购买人</span>
+              </div>
+            </template>
+            <span>{{item.user.name}}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="mail" class-name="des-icon"/>
+                <span>邮箱地址</span>
+              </div>
+            </template>
+            <span>{{item.user.email}}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="mobile-phone" class-name="des-icon"/>
+                <span>联系电话</span>
+              </div>
+            </template>
+            <span>{{item.user.phone}}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="logistics" class-name="des-icon"/>
+                <span>产品名称</span>
+              </div>
+            </template>
+            <span>{{item.products[0].name}}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="status" class-name="des-icon"/>
+                <span>订单状态</span>
+              </div>
+            </template>
+            <el-tag :type="item.status === 0 ? 'warning' : 'success'">{{item.status === 0 ? '进行中' : '已完成'}}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="time" class-name="des-icon"/>
+                <span>购买时间</span>
+              </div>
+            </template>
+            <span>{{item.buyTime}}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="home" class-name="des-icon"/>
+                <span>收货地址</span>
+              </div>
+            </template>
+            <span>{{item.address}}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <div>
+                <svg-icon icon-class="db" class-name="des-icon"/>
+                <span>支付方式</span>
+              </div>
+            </template>
+            <el-tag v-if="item.channel === '微信支付'" type="success">微信支付</el-tag>
+            <el-tag v-else-if="item.channel === '支付宝'" type="primary">支付宝</el-tag>
+          </el-descriptions-item>
+        </el-descriptions>
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -118,6 +129,7 @@ export default {
   name: "Deliver",
   data(){
     return{
+      loading: false,
       dialogVisible: false,
       pageNum: 1,
       pageSize: 3,
@@ -130,13 +142,15 @@ export default {
   },
   methods: {
     initData(){
+      this.loading = true;
       let url = '/order/get?status=0&pageNum=' + this.pageNum + '&pageSize=' + this.pageSize;
       this.getRequest(url).then(resp => {
         if(resp){
           this.total = resp.data.total;
           this.listData = resp.data.data;
         }
-      })
+      });
+      setInterval(() => {this.loading = false;},1000);
     },
     handleConfirm(data) {
       this.$confirm('确认给客户[' + data.user.name + ']的编号为：' + data.orderId + '的订单发货吗？','提示',{
@@ -171,6 +185,21 @@ export default {
     handleCurrentChange(page) {
       this.pageNum = page;
       this.initData();
+    },
+    handleCancel(data) {
+      this.$confirm('此操作将驳回此订单，确认继续吗？','提示',{
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.putRequest('/order/update/status?status=-1&id='+data.orderId).then(resp => {
+          if(resp){
+            this.initData();
+          }
+        })
+      }).catch(() => {
+        this.$message.info('已取消');
+      })
     }
   }
 }
@@ -181,7 +210,7 @@ export default {
   font-size: 20px;
 }
 .middle{
-  height: calc(100vh - 50px);
+  height: calc(100vh - 20px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,5 +221,8 @@ export default {
   margin-top: 18px;
   font-size: 25px;
   font-weight: bold;
+}
+.main{
+  margin: 10px;
 }
 </style>

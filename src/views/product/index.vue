@@ -94,8 +94,8 @@
           width="100">
           <template slot-scope="scope">
             <img
-              v-show="item.id === 1"
-              v-for="item in scope.row.productUrlList"
+              v-show="index === 0"
+              v-for="(item,index) in scope.row.productUrlList"
               :key="item.id"
               style="width: 50px;cursor: pointer;"
               :preview="scope.row.id"
@@ -197,10 +197,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="保险时长" prop="time">
-          <el-input oninput="value=value.replace(/[^0-9.]/g,'')" v-model="formData.time" placeholder="请输入保险时长..."></el-input>
+          <el-select v-model="formData.time" placeholder="请选择...">
+            <el-option v-for="(item,index) in timeList" :key="index" :value="index+1" :label="item"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="适用人群" prop="suitPeople">
-          <el-input v-model="formData.suitPeople" placeholder="适用人群"></el-input>
+          <el-select v-model="formData.suitPeople" placeholder="请选择...">
+            <el-option v-for="(item,index) in suitList" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="销售地区" prop="scope">
           <el-select v-model="formData.scope">
@@ -244,7 +248,7 @@ export default {
   data(){
     return{
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 5,
       total: 0,
       headers: {
         satoken: window.sessionStorage.getItem('satoken')
@@ -276,6 +280,25 @@ export default {
         planImgUrl: ''
       },
       cateList: [],
+      suitList: [
+        "婴幼儿",
+        "少儿",
+        "中年人",
+        "女性",
+        "中老年人",
+        "老年人",
+        "无限制",
+        "住宅",
+        "宠物"
+      ],
+      timeList: [
+        "一年",
+        "两年",
+        "三年",
+        "五年",
+        "十年",
+        "其他"
+      ]
     }
   },
   methods: {
@@ -344,8 +367,8 @@ export default {
       window.open('http://localhost:8081/file/download/excel/product');
     },
     handleSuccessUpload(res,file,fileList) {
-      const url = res.data.data.url;
-      this.formData.planImgUrl = url;
+      console.log(res);
+      this.formData.planImgUrl = res.data;
     },
     handleErrorUpload(err,file,fileList){
       this.$message.error('文件上传失败，请联系管理员！');

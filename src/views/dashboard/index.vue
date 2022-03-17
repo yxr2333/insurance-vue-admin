@@ -8,7 +8,7 @@
         </div>
         <div style="display:flex;flex-direction: column;font-size: 20px;">
           <div>你好，{{ name }}，休息一会儿吧</div>
-          <div style="font-size: 16px;margin-top: 15px;color: #99a9bf">前端工程师|蚂蚁金服-VUE平台</div>
+          <div style="font-size: 16px;margin-top: 15px;color: #99a9bf">全栈工程师|蚂蚁金服--Vue+Java平台</div>
         </div>
       </div>
     </div>

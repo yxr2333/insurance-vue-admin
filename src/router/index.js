@@ -154,6 +154,35 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/logger',
+    component: Layout,
+    name: 'Logger',
+    meta: {
+      title: '日志管理',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'online',
+        component: () => import('@/views/logger/Online'),
+        name: 'Online',
+        meta: {
+          title: '在线用户',
+          icon: 'wechat'
+        }
+      },
+      {
+        path: 'logger',
+        component: () => import('@/views/logger/Logger'),
+        name: 'Logger',
+        meta: {
+          title: '登录日志',
+          icon: 'documentation'
+        }
+      }
+    ]
+  },
+  {
     path: '/mail',
     component: Layout,
     name: 'Mail',

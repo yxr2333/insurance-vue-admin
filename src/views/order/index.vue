@@ -33,13 +33,13 @@
         </el-collapse-transition>
       </div>
       <div>
-          <el-button icon="el-icon-plus" @click="addDialogVisible = true">新建订单</el-button>
-          <el-button icon="el-icon-upload" @click="handleImport" type="primary">导入数据</el-button>
-          <el-button icon="el-icon-download" @click="handleExport" type="primary">导出数据</el-button>
+        <el-button icon="el-icon-plus" @click="addDialogVisible = true">新建订单</el-button>
+        <el-button icon="el-icon-upload" @click="handleImport" type="primary">导入数据</el-button>
+        <el-button icon="el-icon-download" @click="handleExport" type="primary">导出数据</el-button>
       </div>
     </div>
     <div class="main">
-        <el-table
+      <el-table
             style="width: 100%"
             v-loading="loading"
             :data="orderData"
@@ -87,6 +87,10 @@
               width="120"
               prop="channel"
               label="支付渠道">
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.channel === '微信支付'" type="success">微信支付</el-tag>
+                <el-tag v-else-if="scope.row.channel === '支付宝'" type="primary">支付宝</el-tag>
+              </template>
             </el-table-column>
             <el-table-column
               prop="status"
@@ -121,6 +125,15 @@
               </template>
             </el-table-column>
         </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-sizes="[5,10,20,30,50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -142,7 +155,7 @@ export default {
       addDialogVisible: false,
       pageNum: 1,
       pageSize: 10,
-      count: -1
+      total: -1
     }
   },
   mounted() {
@@ -155,7 +168,7 @@ export default {
       this.getRequest(url).then((resp) => {
         if(resp){
           console.log(resp);
-          this.count = resp.data.total;
+          this.total = resp.data.total;
           this.orderData = resp.data.data;
         }
       });
@@ -201,6 +214,14 @@ export default {
           this.orderData = resp.data;
         }
       })
+    },
+    handleSizeChange(size) {
+      this.pageSize = size;
+      this.initData();
+    },
+    handleCurrentChange(page) {
+      this.pageNum = page;
+      this.initData();
     }
   }
 };
@@ -213,5 +234,8 @@ export default {
 }
 .main{
   margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 </style>
